@@ -11,6 +11,12 @@ actually copied.
 
 That's it. That's the app. It's quietly delightful.
 
+## Watch it in action
+<a href="https://www.youtube.com/watch?v=ZdvUT1rVees"><img width="843" height="513" alt="Screenshot 2026-06-20 at 3 38 30 PM" src="https://github.com/user-attachments/assets/890d56a7-d329-4d4f-a955-ad2e6304da08" /></a>
+
+
+
+
 ## Getting it running
 
 PastePeek is a native macOS app (macOS 14 and up). Built with Swift and a healthy
