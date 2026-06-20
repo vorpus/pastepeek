@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.lizard.pastepeek.agent</string>
+
+	<!-- Paths are relative to the app bundle root. Launch the main executable
+	     with --background so PastePeek starts invisibly at login. -->
+	<key>BundleProgram</key>
+	<string>Contents/MacOS/PastePeek</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>Contents/MacOS/PastePeek</string>
+		<string>--background</string>
+	</array>
+
+	<key>RunAtLoad</key>
+	<true/>
+	<key>LimitLoadToSessionType</key>
+	<string>Aqua</string>
+	<key>AssociatedBundleIdentifiers</key>
+	<array>
+		<string>com.lizard.pastepeek</string>
+	</array>
+</dict>
+</plist>

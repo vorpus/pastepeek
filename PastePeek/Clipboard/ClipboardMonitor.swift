@@ -23,7 +23,7 @@ final class ClipboardMonitor: NSObject {
         guard timer == nil else { return }
         // A selector-based timer sidesteps the @Sendable-closure capture rules of
         // Swift 6; the timer fires on the main run loop, matching our isolation.
-        let t = Timer.scheduledTimer(
+        let t = Timer(
             timeInterval: interval,
             target: self,
             selector: #selector(poll),
@@ -31,6 +31,9 @@ final class ClipboardMonitor: NSObject {
             repeats: true
         )
         t.tolerance = interval * 0.25
+        // .common keeps polling alive during run-loop tracking (menus, resizing,
+        // system overlays) so clipboard changes are never missed.
+        RunLoop.main.add(t, forMode: .common)
         timer = t
     }
 

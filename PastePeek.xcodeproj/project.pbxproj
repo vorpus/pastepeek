@@ -6,16 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AA0000000000000000000012 /* com.lizard.pastepeek.agent.plist in Copy LaunchAgents */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000011 /* com.lizard.pastepeek.agent.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA0000000000000000000013 /* Copy LaunchAgents */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "Contents/Library/LaunchAgents";
+			dstSubfolderSpec = 1;
+			files = (
+				AA0000000000000000000012 /* com.lizard.pastepeek.agent.plist in Copy LaunchAgents */,
+			);
+			name = "Copy LaunchAgents";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		AA0000000000000000000004 /* PastePeek.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PastePeek.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000011 /* com.lizard.pastepeek.agent.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.lizard.pastepeek.agent.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AA0000000000000000000007 /* Exceptions for "PastePeek" folder */ = {
+		AA0000000000000000000007 /* Exceptions for "PastePeek" folder in "PastePeek" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				PastePeek.entitlements,
 			);
 			target = AA0000000000000000000005 /* PastePeek */;
 		};
@@ -25,7 +43,7 @@
 		AA0000000000000000000006 /* PastePeek */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				AA0000000000000000000007 /* Exceptions for "PastePeek" folder */,
+				AA0000000000000000000007 /* Exceptions for "PastePeek" folder in "PastePeek" target */,
 			);
 			path = PastePeek;
 			sourceTree = "<group>";
@@ -47,8 +65,17 @@
 			isa = PBXGroup;
 			children = (
 				AA0000000000000000000006 /* PastePeek */,
+				AA0000000000000000000014 /* BuildSupport */,
 				AA0000000000000000000003 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000014 /* BuildSupport */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000011 /* com.lizard.pastepeek.agent.plist */,
+			);
+			path = BuildSupport;
 			sourceTree = "<group>";
 		};
 		AA0000000000000000000003 /* Products */ = {
@@ -69,6 +96,7 @@
 				AA0000000000000000000008 /* Sources */,
 				AA0000000000000000000009 /* Frameworks */,
 				AA000000000000000000000A /* Resources */,
+				AA0000000000000000000013 /* Copy LaunchAgents */,
 			);
 			buildRules = (
 			);

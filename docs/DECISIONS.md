@@ -25,15 +25,25 @@ observing the clipboard, are awkward under App Sandbox. Hardened Runtime is on. 
 we ever target the Mac App Store we'll revisit (and the login-item helper would
 need to be sandboxed too). See ROADMAP.
 
-## Launch-at-login uses `SMAppService.mainApp` *for now* — known gap
-The "invisible at startup" requirement needs the app to be launched with
-`--background`. **`SMAppService.mainApp` cannot pass launch arguments**, so today a
-login launch would behave like a manual one. The detection plumbing
-(`LaunchContext.isBackgroundLaunch`) is already in place; switching to
-`SMAppService.agent(plistName:)` with a bundled LaunchAgent plist (which *can* set
-`ProgramArguments`) is the fix — tracked in ROADMAP. We kept `mainApp` in the first
-cut to avoid adding a copy-files build phase and a bundled plist before the core
-loop was proven.
+## Launch-at-login via `SMAppService.agent(plistName:)`
+Invisible-at-startup requires launching with `--background`.
+**`SMAppService.mainApp` cannot pass launch arguments**, so we use the *agent*
+variant with a bundled LaunchAgent plist
+(`BuildSupport/com.lizard.pastepeek.agent.plist`) whose `ProgramArguments` include
+`--background`. `RunAtLoad = true`, `LimitLoadToSessionType = Aqua`, and
+`BundleProgram = Contents/MacOS/PastePeek` (paths relative to the bundle).
+
+The plist is placed at `Contents/Library/LaunchAgents/<name>.plist` in the app via
+a **Copy Files build phase** — `dstSubfolderSpec = 1` (Wrapper, = the `.app` root;
+**not** `16`, which is the Products directory) with
+`dstPath = "Contents/Library/LaunchAgents"`. The plist lives outside the
+synchronized `PastePeek/` group (in `BuildSupport/`) so it isn't auto-bundled as a
+top-level resource.
+
+Runtime caveat: `register()` requires a stably-signed app. Ad-hoc/dev builds from
+DerivedData may report `.requiresApproval` (the user enables it in System Settings
+› General › Login Items) or fail to register until the app is signed with a
+Developer ID — consistent with the distribution notes in the README.
 
 ## GIF playback via `NSImageView`
 `NSImageView` plays animated GIFs when `animates = true` and the image has a

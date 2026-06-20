@@ -9,24 +9,27 @@
 - [x] First/manual launch → Settings; relaunch → existing instance shows Settings
 - [x] `--background` launch-mode detection (stay invisible)
 
-## Next: true invisible-at-startup
-The headline gap. Replace `SMAppService.mainApp` with
-`SMAppService.agent(plistName:)`:
-- [ ] Add `Contents/Library/LaunchAgents/com.lizard.pastepeek.agent.plist` with
-      `BundleProgram = Contents/MacOS/PastePeek` and
-      `ProgramArguments = [..., "--background"]`, `RunAtLoad = true`,
-      `LimitLoadToSessionType = Aqua`.
-- [ ] Add a Copy Files build phase to place the plist in the bundle.
-- [ ] `LoginItemManager` registers/unregisters the agent; handle
-      `.requiresApproval` (System Settings › General › Login Items).
+## Done (v0.2)
+- [x] **True invisible-at-startup** via `SMAppService.agent(plistName:)` + bundled
+      LaunchAgent plist passing `--background` (Copy Files phase, `dstSubfolderSpec = 1`).
+- [x] Settings: choose popup **corner**, **duration** (1–15s), **fade** on/off
+      (`AppSettings`, persisted to UserDefaults; `ToastPresenter` reads them per show).
+- [x] Clipboard poll timer runs in `.common` run-loop mode (no missed changes
+      during tracking/overlays).
+- [x] Diagnosed the screenshot case: detection works; the system screenshot
+      *floating thumbnail* defers the clipboard write ~5s and sits bottom-right
+      (same as the old fixed toast corner). Configurable corner is the fix; users
+      can also disable the thumbnail in Cmd+Shift+5 › Options.
 
 ## Preview quality
 - [ ] Distinguish "rich text differs from plain text" and flag likely clipboard
       hijacks explicitly.
 - [ ] Show image dimensions / file size / GIF frame count in the toast.
 - [ ] Multi-file: small stacked icons instead of "+N more".
-- [ ] Respect Reduce Motion; configurable toast corner, duration, and size.
+- [ ] Respect Reduce Motion; configurable toast size.
 - [ ] Multi-display: show on the screen with the focused window, not just main.
+- [ ] Optionally detect the screenshot thumbnail and offer to show the preview
+      immediately / nudge the toast away from it.
 
 ## Interaction
 - [ ] Click the toast to pin it / copy a cleaned version / open the file.
