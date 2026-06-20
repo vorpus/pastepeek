@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  PastePeek is not sandboxed for now: reading arbitrary file URLs off the
+	  pasteboard to render native file icons, and observing the system clipboard,
+	  are awkward under App Sandbox. Revisit if we ever target the Mac App Store
+	  (see docs/DECISIONS.md). Hardened Runtime is enabled via build settings.
+	-->
+	<key>com.apple.security.app-sandbox</key>
+	<false/>
+</dict>
+</plist>
