@@ -45,6 +45,16 @@ DerivedData may report `.requiresApproval` (the user enables it in System Settin
 › General › Login Items) or fail to register until the app is signed with a
 Developer ID — consistent with the distribution notes in the README.
 
+## A single copied image *file* shows the image, not a file icon
+Copying an image attachment from Messages (or an image in Finder) puts only a
+`public.file-url` on the pasteboard — no image data — so the file-URL branch ran
+first and we showed a generic icon. "Copy Image" from a viewer puts raw image
+data instead, which is why that path worked. Fix: when exactly one copied file's
+content type conforms to `.image`, load it from disk (animating GIFs) and show it,
+captioned with the file name. Multiple files or non-image files still show
+icon(s). Detection uses `URL.resourceValues(forKeys: [.contentTypeKey])` with a
+filename-extension fallback.
+
 ## GIF playback via `NSImageView`
 `NSImageView` plays animated GIFs when `animates = true` and the image has a
 multi-frame representation — no third-party dependency. The flag must be re-asserted

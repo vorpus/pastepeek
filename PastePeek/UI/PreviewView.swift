@@ -27,22 +27,44 @@ struct PreviewView: View {
         )
     }
 
+    /// Wraps a preview with an optional file-name caption underneath.
+    @ViewBuilder
+    private func captioned<Content: View>(
+        _ caption: String?,
+        @ViewBuilder _ content: () -> Content
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            content()
+            if let caption {
+                Text(caption)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+        }
+    }
+
     @ViewBuilder
     private var content: some View {
         switch item {
-        case .animatedGIF(let data, _):
-            AnimatedImageView(data: data)
-                .frame(maxWidth: .infinity)
-                .frame(height: 130)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+        case .animatedGIF(let data, _, let caption):
+            captioned(caption) {
+                AnimatedImageView(data: data)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 130)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
 
-        case .image(let image):
-            Image(nsImage: image)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity)
-                .frame(height: 130)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+        case .image(let image, let caption):
+            captioned(caption) {
+                Image(nsImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 130)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
 
         case .richText(_, let plain):
             Text(plain)

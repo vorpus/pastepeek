@@ -7,8 +7,8 @@ import AppKit
 enum ClipboardItem {
     case files([URL])
     case color(NSColor)
-    case animatedGIF(data: Data, image: NSImage)
-    case image(NSImage)
+    case animatedGIF(data: Data, image: NSImage, caption: String?)
+    case image(NSImage, caption: String?)
     case url(URL)
     case richText(attributed: NSAttributedString, plain: String)
     case text(String)

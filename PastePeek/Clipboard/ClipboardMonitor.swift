@@ -54,11 +54,17 @@ final class ClipboardMonitor: NSObject {
     /// Classifies the pasteboard, preferring the most specific representation.
     /// Order matters: files → color → GIF → image → web URL → rich text → text.
     static func read(from pb: NSPasteboard) -> ClipboardItem? {
-        // 1. File URLs (possibly several)
+        // 1. File URLs (possibly several). A single image/GIF file (e.g. an image
+        //    attachment copied from Messages, or an image copied in Finder) lands
+        //    as just a file URL with no image data — show its actual contents
+        //    rather than a generic icon.
         if let urls = pb.readObjects(
             forClasses: [NSURL.self],
             options: [.urlReadingFileURLsOnly: true]
         ) as? [URL], !urls.isEmpty {
+            if urls.count == 1, let url = urls.first, let item = imageItem(forFile: url) {
+                return item
+            }
             return .files(urls)
         }
 
@@ -73,13 +79,13 @@ final class ClipboardMonitor: NSObject {
         let gifType = NSPasteboard.PasteboardType("com.compuserve.gif")
         if let gif = pb.data(forType: gifType), let image = NSImage(data: gif) {
             return frameCount(of: gif) > 1
-                ? .animatedGIF(data: gif, image: image)
-                : .image(image)
+                ? .animatedGIF(data: gif, image: image, caption: nil)
+                : .image(image, caption: nil)
         }
 
         // 4. Still image
         if let image = NSImage(pasteboard: pb) {
-            return .image(image)
+            return .image(image, caption: nil)
         }
 
         // 5. Web URL (non-file)
@@ -112,5 +118,26 @@ final class ClipboardMonitor: NSObject {
         guard let rep = NSBitmapImageRep(data: gifData),
               let count = rep.value(forProperty: .frameCount) as? Int else { return 1 }
         return count
+    }
+
+    /// If `url` points at an image file, load it for display (animating GIFs),
+    /// captioned with the file name. Returns nil for non-image files.
+    private static func imageItem(forFile url: URL) -> ClipboardItem? {
+        let type = (try? url.resourceValues(forKeys: [.contentTypeKey]))?.contentType
+            ?? UTType(filenameExtension: url.pathExtension)
+        guard let type else { return nil }
+        let name = url.lastPathComponent
+
+        if type.conforms(to: .gif),
+           let data = try? Data(contentsOf: url),
+           let image = NSImage(data: data) {
+            return frameCount(of: data) > 1
+                ? .animatedGIF(data: data, image: image, caption: name)
+                : .image(image, caption: name)
+        }
+        if type.conforms(to: .image), let image = NSImage(contentsOf: url) {
+            return .image(image, caption: name)
+        }
+        return nil
     }
 }
