@@ -33,6 +33,35 @@ xcodebuild -project PastePeek.xcodeproj -scheme PastePeek -configuration Debug b
 open ~/Library/Developer/Xcode/DerivedData/PastePeek-*/Build/Products/Debug/PastePeek.app
 ```
 
+## Always-on, just for you (no Apple Developer account)
+
+Want PastePeek running quietly in the background and starting itself at every
+login? You don't need a paid Developer account — an ad-hoc-signed build plus a
+personal LaunchAgent is enough for your own Mac.
+
+```sh
+./BuildSupport/install-local.sh
+```
+
+That script builds a Release (ad-hoc signed), installs it to
+`/Applications/PastePeek.app`, and writes a LaunchAgent to
+`~/Library/LaunchAgents/com.lizard.pastepeek.agent.plist` that launches it with
+`--background` (so it stays invisible). `RunAtLoad` starts it at login and
+`KeepAlive` brings it back if it ever quits. Re-run the script any time after
+changing the code to pick up a new build.
+
+Handy follow-ups:
+
+```sh
+launchctl print gui/$(id -u)/com.lizard.pastepeek.agent    # status
+launchctl bootout gui/$(id -u)/com.lizard.pastepeek.agent  # stop it now
+rm ~/Library/LaunchAgents/com.lizard.pastepeek.agent.plist # don't start at login
+```
+
+Since PastePeek is an accessory app (no Dock or menu-bar icon), its only UI once
+running is the corner toast. To reach Settings, launch it without the background
+flag: `open -a PastePeek`.
+
 ## A peek under the hood
 
 Curious how it works? The design notes live in [docs/](docs/): how it classifies
